@@ -1,0 +1,59 @@
+Sub DownloadDataBL()
+
+Dim ticker, Current As String
+Dim Fields, ref_date As String
+Dim Last_Date, Current_date As Date
+
+ticker = "EURUSD Curncy"
+Fields = "DFLT_VOL_SURF_MID"
+
+Last_Date = DateSerial(2013, 10, 29)
+For i = 1 To 60
+
+Current_date = Last_Date - i
+Current = Format(Current_date, "yyyymmdd")
+'MsgBox (Current)'
+
+Set NewBook = Workbooks.Add
+Set NewBook = ActiveWorkbook
+
+ref_date = "REFERENCE_DATE = " & Current
+    With NewBook
+         .Sheets("sheet1").Range("A1").Value = "=BDS(""" & ticker & """,""DFLT_VOL_SURF_MID"",""" & ref_date & """)"
+    End With
+
+Next i
+   
+MsgBox ("Part 1 Done")
+  
+End Sub
+
+Sub main()
+Call DownloadDataBL
+End Sub
+
+Sub save()
+Dim wb As Workbook
+Dim wbs As Workbooks
+Dim Current, Last_Date As Date
+Dim i As Integer
+Dim File_name, ticker As String
+
+
+ticker = "EURUSD Curncy"
+Last_Date = DateSerial(2013, 10, 29)
+
+Set wbs = Application.Workbooks
+i = 1
+For Each wb In wbs
+  If (wb.Name <> "Book1.xlsm" And wb.Name <> "2.Zilliard g.xlsx" And wb.Name <> "Arb1.xlsx" And wb.Name <> "Vol 10 min.xlsx" And wb.Name <> "List Spears.xlsx") Then
+    Current = Last_Date - i
+    File_name = "C:\Users\gmart_000\Desktop\Zherdev\BL_Data\" & ticker & "_" & Current & "_day" & ".csv"
+    wb.SaveAs File_name, FileFormat:=xlCSV
+    wb.Close
+    i = i + 1
+    End If
+Next wb
+
+MsgBox ("Part 2 Done")
+End Sub
